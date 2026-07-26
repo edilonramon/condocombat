@@ -1,30 +1,26 @@
-# Stage 1: Builder
-FROM python:3.12-slim AS builder
+FROM python:3.12-slim
 
 WORKDIR /app
 
-# Instala o uv para gerenciar dependências
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uv/bin/uv
+# Instala o uv diretamente na imagem
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-# Copia os arquivos de manifesto de dependências
+# Copia os arquivos de dependências
 COPY pyproject.toml uv.lock ./
 
-# Instala as dependências de produção sem instalar o projeto atual ainda
-RUN /uv/bin/uv sync --frozen --no-dev --no-install-project
+# Instala as dependências (o uv cria o .venv automaticamente e com os links corretos)
+RUN uv sync --frozen --no-dev --no-install-project
 
-# Stage 2: Runtime
-FROM python:3.12-slim AS runner
-
-WORKDIR /app
-
-# Copia o ambiente virtual com as dependências instaladas
-COPY --from=builder /app/.venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Copia o código da aplicação
+# Copia o restante do código do backend
 COPY . .
+
+# Corrige permissões e quebras de linha do Windows no entrypoint
+RUN chmod +x ./entrypoint.sh && sed -i 's/\r$//' ./entrypoint.sh
+
+# Adiciona o ambiente virtual ao PATH do container
+ENV PATH="/app/.venv/bin:$PATH"
 
 EXPOSE 8000
 
-# Executa o entrypoint script
+# Executa o entrypoint
 CMD ["/bin/bash", "./entrypoint.sh"]

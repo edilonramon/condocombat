@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # 1. Banco de Dados PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: condocombat-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: condocombat_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # 2. Backend (FastAPI)
+  backend:
+    build: 
+      context: ./backend
+    container_name: condocombat-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/condocombat_db
+      - SECRET_KEY=sua-chave-secreta-super-segura-aqui-123456
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # 3. Frontend
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: condocombat-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# Volume persistente para os dados do banco não sumirem ao reiniciar
+volumes:
+  pgdata:
