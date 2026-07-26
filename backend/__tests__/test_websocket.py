@@ -1,7 +1,7 @@
 """Tests for WebSocket /ws/ocorrencias feed."""
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
@@ -72,7 +72,7 @@ def test_connect_with_valid_token(client: TestClient):
     token = jwt.encode(
         {
             "sub": "admin@condocombat.com",
-            "exp": datetime.now(timezone.utc) + timedelta(hours=1),
+            "exp": datetime.now(UTC) + timedelta(hours=1),
         },
         settings.SECRET_KEY,
         algorithm=settings.ALGORITHM,
