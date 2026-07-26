@@ -46,3 +46,9 @@ exclude = ["alembic*"]
 venvPath = "."
 venv = ".venv"
 
+[tool.ruff.lint]
+ignore = [
+    "B008",   # Permite Depends() como valor padrão nas rotas do FastAPI
+    "SIM117", # Permite context managers com 'with' aninhados em testes
+    "BLE001", # Permite except Exception genérico no ws_manager
+]
