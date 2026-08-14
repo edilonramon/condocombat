@@ -27,8 +27,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 📦 Build da Landing Page
+      - name: 📦 Build da Landing Page e Instalação da CLI Netlify
         run: |
+          npm install -g netlify-cli
           cd landing
           npm ci
           npm run build
