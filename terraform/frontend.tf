@@ -1,8 +1,7 @@
 resource "render_web_service" "frontend" {
-  name     = "condocombat-frontend-web"
-  plan     = "free"
-  region   = "oregon"
-  owner_id = var.render_owner_id
+  name   = "condocombat-frontend-web"
+  plan   = "free"
+  region = "oregon"
 
   runtime_source = {
     image = {
