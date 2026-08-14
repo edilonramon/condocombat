@@ -1,11 +1,13 @@
 resource "render_web_service" "backend" {
-  name    = "condocombat-backend-api"
-  env     = "image"
-  region  = "oregon"
-  plan    = "free"
+  name     = "condocombat-backend-api"
+  plan     = "free"
+  region   = "oregon"
+  owner_id = var.render_owner_id
 
-  image = {
-    image_url = "docker.io/${var.dockerhub_username}/condocombat-backend:latest"
+  runtime_source = {
+    image = {
+      image_url = "docker.io/${var.dockerhub_username}/condocombat-backend:latest"
+    }
   }
 
   env_vars = {
