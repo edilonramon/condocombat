@@ -1,5 +1,7 @@
 terraform {
-  required_version = ">= 1.5.0"
+  # Requer a versão mais recente do Terraform (1.10.x ou superior)
+  required_version = ">= 1.10.0"
+
   required_providers {
     supabase = {
       source  = "supabase/supabase"
@@ -11,7 +13,7 @@ terraform {
     }
     netlify = {
       source  = "netlify/netlify"
-      version = "~> 0.1"
+      version = "~> 0.4"
     }
   }
 }
