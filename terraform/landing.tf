@@ -1,17 +1,15 @@
 # Busca a referência do site da Landing Page na Netlify
 data "netlify_site" "landing" {
-  name      = var.netlify_site_name
-  team_slug = "6a56c5337599e4fcb5dd1f7c"
+  name = var.netlify_site_name
 }
 
 # Configura a variável de ambiente PUBLIC_APP_URL com a URL gerada para o Frontend (Render)
 resource "netlify_environment_variable" "landing_public_url" {
   site_id = data.netlify_site.landing.id
-  team_id = "6a56c5337599e4fcb5dd1f7c"
   key     = "PUBLIC_APP_URL"
   values = [
     {
-      value   = render_web_service.frontend.url
+      value   = render_service.frontend.url
       context = "all"
     }
   ]
@@ -21,7 +19,7 @@ resource "netlify_environment_variable" "landing_public_url" {
 resource "terraform_data" "landing_deploy" {
   triggers_replace = [
     data.netlify_site.landing.id,
-    render_web_service.frontend.url
+    render_service.frontend.url
   ]
 
   provisioner "local-exec" {
