@@ -1,19 +1,9 @@
+# Busca a referência do site da Landing Page na Netlify pelo ID
 data "netlify_site" "landing" {
   id = var.netlify_site_name
 }
 
-resource "netlify_environment_variable" "landing_public_url" {
-  site_id = data.netlify_site.landing.id
-  team_id = "edilon-condoCombat"
-  key     = "PUBLIC_APP_URL"
-  values = [
-    {
-      value   = render_web_service.frontend.url
-      context = "all"
-    }
-  ]
-}
-
+# Compila o Astro com a URL do Frontend e faz o deploy dos arquivos estáticos via Netlify CLI
 resource "terraform_data" "landing_deploy" {
   triggers_replace = [
     data.netlify_site.landing.id,
@@ -27,8 +17,4 @@ resource "terraform_data" "landing_deploy" {
     }
     command = "npm run build && npx netlify-cli deploy --dir=dist --prod --auth=${var.netlify_api_token} --site=${data.netlify_site.landing.id}"
   }
-
-  depends_on = [
-    netlify_environment_variable.landing_public_url
-  ]
 }
