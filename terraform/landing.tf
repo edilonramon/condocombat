@@ -21,7 +21,11 @@ resource "terraform_data" "landing_deploy" {
   ]
 
   provisioner "local-exec" {
-    command = "npx netlify-cli deploy --dir=${path.module}/../landing/dist --prod --auth=${var.netlify_api_token} --site=${data.netlify_site.landing.id}"
+    working_dir = "${path.module}/../landing"
+    environment = {
+      PUBLIC_APP_URL = render_web_service.frontend.url
+    }
+    command = "npm run build && npx netlify-cli deploy --dir=dist --prod --auth=${var.netlify_api_token} --site=${data.netlify_site.landing.id}"
   }
 
   depends_on = [
