@@ -1,6 +1,5 @@
 data "netlify_site" "landing" {
-  name      = var.netlify_site_name
-  team_slug = var.dockerhub_username
+  id = var.netlify_site_name
 }
 
 resource "netlify_environment_variable" "landing_public_url" {

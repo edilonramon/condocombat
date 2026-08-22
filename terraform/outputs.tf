@@ -7,5 +7,5 @@ output "frontend_url" {
 }
 
 output "landing_url" {
-  value = "https://${data.netlify_site.landing.name}.netlify.app"
+  value = data.netlify_site.landing.url
 }
