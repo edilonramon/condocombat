@@ -1,9 +1,12 @@
+# Busca a referência do site da Landing Page na Netlify pelo ID
 data "netlify_site" "landing" {
   id = var.netlify_site_name
 }
 
+# Configura a variável de ambiente PUBLIC_APP_URL com a URL gerada para o Frontend (Render)
 resource "netlify_environment_variable" "landing_public_url" {
   site_id = data.netlify_site.landing.id
+  team_id = data.netlify_site.landing.account_id
   key     = "PUBLIC_APP_URL"
   values = [
     {
@@ -13,6 +16,7 @@ resource "netlify_environment_variable" "landing_public_url" {
   ]
 }
 
+# Fazer o deploy dos arquivos compilados (landing/dist) gerados no CI via Terraform
 resource "terraform_data" "landing_deploy" {
   triggers_replace = [
     data.netlify_site.landing.id,
